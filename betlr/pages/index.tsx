@@ -19,9 +19,8 @@ const Home: NextPage = () => {
   if(!address) {
     return <Login />
   }
-
+  
   return ( 
-
     <div className="bg-[#1a1a0c] min-h-screen flex flex-col">
         <Head>
             <title>BETLER Lottery</title>
