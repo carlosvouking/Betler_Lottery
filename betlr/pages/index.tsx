@@ -16,10 +16,7 @@ const Home: NextPage = () => {
  
   console.log(address);
 
-  if(!address) {
-    return <Login />
-  }
-  
+
   return ( 
     <div className="bg-[#1a1a0c] min-h-screen flex flex-col">
         <Head>

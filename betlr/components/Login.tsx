@@ -6,7 +6,7 @@ function Login() {
   return (
     <div>
         <div>
-            <img src={ylogo} title="logo" />
+            
         </div>
     </div>
   )
