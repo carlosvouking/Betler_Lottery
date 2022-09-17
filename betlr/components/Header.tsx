@@ -7,15 +7,12 @@ import { Bars3CenterLeftIcon, Bars4Icon, Bars3Icon } from "@heroicons/react/24/s
 import { shortenAddress } from "../utils/shortenAddress"
 import { useMoralis } from "react-moralis"
 import { useEffect } from "react"
+import { ConnectButton } from "web3uikit"
 
 import ylogo from "../images/Y_logo.png"
 
 function Header() {
     const { enableWeb3, account, isWeb3Enabled } = useMoralis()
-
-    useEffect(() => {
-        console.log(isWeb3Enabled)
-    }, [isWeb3Enabled])
 
     return (
         <header className="grid grid-cols-2 md:grid-cols-5 justify-between items-center p-5">
@@ -25,10 +22,13 @@ function Header() {
                 </div>
                 <div>
                     <h1 className="text-yellow-500 font-bold">DECENTRALIZED RAPHL</h1>
-                    <p className="text-white text-sm ">
-                        Users connected:
+                    {/* <p className="text-white text-sm ">
+                        Connected folks:
                         <b className="text-yellow-200">{shortenAddress(account)}</b>
-                    </p>
+                    </p> */}
+                    <div className="w-15 mt-2">
+                        <ConnectButton moralisAuth={false} />
+                    </div>
                 </div>
             </div>
 
