@@ -9,7 +9,26 @@
        @apply bg-[#252510] text-white p-4 flex-1 rounded-md border-2 border-[#4e5755]
     }
 
-    .raffleStats-Wrapper {
+    .raffleStats-wrapper {
        @apply bg-[#252510] p-5 rounded-lg border-[#4e5755] border
     }
+
+    .countdown {
+       @apply bg-[#777755] text-white text-center lg:min-w-[150px] text-4xl p-4 rounded-xl border-[#858558] border
+    }
+
+    .countdown-label {
+       @apply text-center text-white text-sm uppercase p-4 
+    }
+
+  .countdown-completed-label {
+     @apply text-red-500 text-xl text-center animate-bounce mb-3
+  }
+
+  .admin-button {
+     @apply bg-[#2c2c18] p-2 flex-1 rounded-md border border-[#3b3b24] hover:bg-[#414122]
+  }
+
 }
+
+

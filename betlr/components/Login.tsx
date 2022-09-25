@@ -27,7 +27,7 @@ function Login() {
                 >
                     Connect Wallet
                 </button> */}
-                <div className="justify-center items-center">
+                <div className="justify-center items-center w-full flex">
                     <ConnectButton moralisAuth={false} />
                 </div>
             </div>
