@@ -13,6 +13,8 @@ import CountdownTimer from "../components/CountdownTimer"
 //import toast from "react-hot-toast"
 import Marquee from "react-fast-marquee"
 import AdminControls from "../components/AdminControls"
+import NextPick from "../components/NextPick"
+import RaffleEntrance from "../components/RaffleEntrance"
 
 const Home: NextPage = () => {
     const { enableWeb3, account, isWeb3Enabled, isWeb3EnableLoading } = useMoralis()
@@ -68,26 +70,26 @@ const Home: NextPage = () => {
             <div className="flex-1">
                 {account ? <Header /> : <Login />}
 
-                <Marquee className="bg-[#292919]" gradient={false} speed={80}>
-                    <div className="flex space-x-2 mx-10">
-                        <h4 className="text-stone-400 font-bold">
-                            Last winner: ...{/* {lastWinner} */}
-                        </h4>
-                        <h4 className="text-stone-400 font-bold">
-                            Previous winning: ...{/* {lastWinnerAmount} */}
-                        </h4>
-                    </div>
-                </Marquee>
-
                 {/* {isRaffleOperator === address && ( */}
                 {account ? (
-                    <div className="flex justify-center mt-5">
+                    <div className="flex justify-center mt-5 mb-5 ml-20 mr-20">
                         <AdminControls />
                     </div>
                 ) : (
-                    <div><h3>Admin control deactivated</h3></div>
+                    <div>
+                        <h3>Admin control deactivated</h3>
+                    </div>
                 )}
-                {/* )} */}
+
+           
+                    {/* <Marquee className="bg-[#292919]" gradient={false} speed={40}>
+                        <div className="flex space-x-2 mx-10">
+                            <h4 className="text-orange-200 font-bold">
+                                ** Most recent winner: ...
+                            </h4>
+                        </div>
+                    </Marquee> */}
+         
 
                 {/* <div className="max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5">
                     <button className="p-5 bg-gradient-to-tr from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full">
@@ -98,81 +100,9 @@ const Home: NextPage = () => {
                     </button>
                 </div> */}
 
-                <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5">
-                    <div className="raffleStats-wrapper">
-                        <h1 className="text-4xl text-yellow-200 font-semibold text-center">
-                            Next Pick
-                        </h1>
-                        <div className="flex justify-between p-2 space-x-2">
-                            <div className="raffleStats">
-                                <h2 className="text-sm">Total pool</h2>
-                                <p className="text-xl">
-                                    {/* {currentWinnigReward && ethers.utils.formatEther(currentWinnigReward?.toString())}{" "} ETH */}
-                                </p>
-                            </div>
-                            <div className="raffleStats">
-                                <h2 className="text-sm">Remaining participations</h2>
-                                {/* <p className="text-xl">{remainingEntries?.toNumber()}</p>    */}
-                            </div>
-                        </div>
-                        {/* clock ticking */}
-                        <div className="mt-5 mb-3">
-                            <CountdownTimer />
-                        </div>
-                    </div>
-
-                    <div className="raffleStats-wrapper space-y-2">
-                        <div className="raffleStats-wrapper">
-                            <div className="flex justify-between items-center text-white pb-2">
-                                <h2 className="">Price per entry</h2>
-                                <p className="">
-                                    {/* {entryPrice && ethers.utils.formatEther(entryPrice?.toString())}{" "} ETH */}
-                                </p>
-                            </div>
-                            <div className="flex text-white items-center space-x-2 bg-[#22220f] border-[#4e5755] border p-3">
-                                <p>TICKETS</p>
-                                <input
-                                    type="number"
-                                    className="flex w-full bg-transparent text-right outline-none"
-                                    min={1}
-                                    max={5}
-                                    value={quantity}
-                                    onChange={(e) => setQuantity(Number(e.target.value))}
-                                />
-                            </div>
-
-                            <div className="space-y-2 mt-2">
-                                <div className="flex items-center justify-between text-gray-400 text-sm italic font-extrabold">
-                                    <p>Total fees of participation</p>
-                                    <p>
-                                        {/* {entryPrice && Number(ether.util.formatEther(entryPrice.toString())) * quantity}{" "} ETH */}
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center justify-between text-gray-400 text-xs italic">
-                                    <p className="ml-3">Service fees</p>
-                                    <p>
-                                        {/* {entryCommission && ethers.utils.formatEther(entryCommission?.toString())}{" "} */}
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center justify-between text-gray-400 text-xs italic">
-                                    <p className="ml-3">+ Network Fees</p>
-                                    <p>TBC</p>
-                                </div>
-                            </div>
-
-                            <button
-                                //  disabled={expiration?.toString() < Date.now().toString() || remainingEntries?.toNumber() === 0}
-                                className="disabled mt-5 w-full bg-gradient-to-br from-yellow-500 to-emerald-00 px-10 py-5 font-semibold rounded-md text-xl
-                                      selection: text-white shadow-xl disabled:from-gray-500 disabled:to-gray-100 disabled:text-gray-100 
-                                      disabled:cursor-not-allowed"
-                                // onClick={handleParticipation}
-                            >
-                                Enter the lottery
-                            </button>
-                        </div>
-                    </div>
+                <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5 md:ml-20 md:mr-20">
+                    <RaffleEntrance />
+                    <NextPick />
                 </div>
             </div>
         </div>

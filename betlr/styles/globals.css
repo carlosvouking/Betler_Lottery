@@ -6,15 +6,15 @@
 /* customed styles */
 @layer components {
     .raffleStats {
-       @apply bg-[#252510] text-white p-4 flex-1 rounded-md border-2 border-[#4e5755]
+       @apply bg-[#252510] text-white p-4 flex-1 rounded-md border border-[#2d3533] 
     }
 
     .raffleStats-wrapper {
-       @apply bg-[#252510] p-5 rounded-lg border-[#4e5755] border
+       @apply bg-[#252510] p-5 rounded-lg border-[#4e5755] flex-1
     }
 
     .countdown {
-       @apply bg-[#777755] text-white text-center lg:min-w-[150px] text-4xl p-4 rounded-xl border-[#858558] border
+       @apply bg-[#777755] text-white text-center lg:min-w-[150px] text-3xl p-4 rounded-xl border-[#858558] border
     }
 
     .countdown-label {
@@ -26,7 +26,7 @@
   }
 
   .admin-button {
-     @apply bg-[#2c2c18] p-2 flex-1 rounded-md border border-[#3b3b24] hover:bg-[#414122]
+     @apply bg-[#2c2c18] p-2 flex-1 rounded-md border border-[#3b3b24] hover:bg-[#4e4e2b]
   }
 
 }

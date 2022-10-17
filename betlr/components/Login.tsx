@@ -20,7 +20,7 @@ function Login() {
             <div className="items-center mb-10">
                 <Image className="rounded" width={250} height={150} priority src={ylogo} />
                 <h1 className="text-yellow-500 text-3xl font-bold">DECENTRALIZED RAPHL</h1>
-                <h2 className="text-white mb-5">Participate by logging with a wallet account</h2>
+                <h2 className="text-white mb-5">Link a wallet account to participate</h2>
                 {/* <button
                     className="rounded-lg bg-white font-bold shadow-lg py-5 px-8"
                     onClick={connect}

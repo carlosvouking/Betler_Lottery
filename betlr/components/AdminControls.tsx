@@ -1,5 +1,5 @@
 import React from "react"
-import toast from "react-hot-toast"
+//import toast from "react-hot-toast"
 
 import {
     StarIcon,
@@ -9,6 +9,7 @@ import {
     ArrowDownOnSquareStackIcon,
     ArrowUturnDownIcon,
     ArrowUturnUpIcon,
+    CurrencyEuroIcon,
 } from "@heroicons/react/24/solid"
 
 function AdminControls() {
@@ -24,16 +25,16 @@ function AdminControls() {
     // const {muteAsync: RefundEveryone} = useContractCall(deployedContract, "RefundEveryone")
 
     const pickWinner = async () => {
-        const notification = toast.loading("Picking a winner...")
+        //const notification = toast.loading("Picking a winner...")
 
         try {
         } catch (error) {}
     }
 
     return (
-        <div className="text-white text-center px-5 py-3 rounded-md border-green-300/20 border">
-            <h2 className="font-bold">Raffle Admin controls</h2>
-            <p className="mb-5">
+        <div className="text-white text-center px-5 py-3 rounded-md border-stone-300/10 border flex-1">
+            <h2 className="font-bold">Admin controls</h2>
+            <p className="mb-4">
                 Raffle Operator Total commissions :{" "}
                 {/* {raffleOperatorTotalCommission && 
                 ethers.utils.formatEther(raffleOperatorTotalCommission?.toString())}{" "} ETH */}
@@ -41,19 +42,19 @@ function AdminControls() {
             <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
                 <button className="admin-button">
                     <StarIcon className="h-6 mx-auto mb-2" />
-                    Pick Winner
+                    Pick A Random Winner
                 </button>
                 <button className="admin-button">
-                    <CurrencyDollarIcon className="h-6 mx-auto mb-2" />
-                    Withdraw commission
+                    <CurrencyEuroIcon className="h-6 mx-auto mb-2" />
+                    Withdraw Commission Fee
                 </button>
                 <button className="admin-button">
                     <ArrowPathIcon className="h-6 mx-auto mb-2" />
-                    Restart Picking
+                    Restart Lottery
                 </button>
                 <button className="admin-button">
                     <ArrowUturnUpIcon className="h-6 mx-auto mb-2" />
-                    Refund Everyone
+                    Refund All Participants
                 </button>
             </div>
         </div>

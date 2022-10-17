@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "hardhat": "^2.10.2"
+    "hardhat": "^2.11.2"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
