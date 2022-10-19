@@ -4,7 +4,9 @@ pragma solidity ^0.8.7;
 
 error RRaffle__InsufficientEntranceFee();
 
-contract RRaffle {
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+
+contract RRaffle is VRFConsumerBaseV2 {
     /** State variable */
     uint256 private immutable i_entranceFee;
     address payable[] private s_players;
@@ -12,7 +14,7 @@ contract RRaffle {
     /**Events */
     event LotteryEnter(address indexed player);
 
-    constructor(uint256 entranceFee) {
+    constructor(address vrfCoordinator, uint256 entranceFee) VRFConsumerBaseV2(vrfCoordinator)  {
         i_entranceFee = entranceFee;
     }
 
@@ -26,8 +28,11 @@ contract RRaffle {
         emit LotteryEnter(msg.sender);
     }
 
-    function getHappyWinner() public {}
+    function getHappyWinner() external {}
 
+    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {}
+
+    /** Views & pure functions */
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
     }

@@ -2,21 +2,44 @@
 
 pragma solidity ^0.8.8;
 
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+
 error Lottery__InsufficientParticipationFees();
 
-contract Lottery {
+contract Lottery is VRFConsumerBaseV2 {
     /**State variable */
     // minimum participation
     uint256 private immutable i_participationFee;
     // participants
     address payable[] private s_participants; // every participant can recieve a payment
+    // coordinator interface..
+    VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
+    bytes32 private immutable i_gasLane;
+    uint64 private immutable i_subscriptionId; // storing subscriptionID in storage
+    uint16 private constant REQUEST_CONFIRMATIONS = 3;
+    uint32 private immutable i_callbackGasLimit;
+    uint32 private constant NUM_WORDS = 1;
 
     /**Events */
     event LotteryEnter(address indexed player);
+    event RequestedLotteryWinner(uint256 indexed requestId);
 
-    // initializing items at contract deployment....
-    constructor(uint256 participationFee) {
+    // initializing items at contract deployment....vrfCoordinatorV2= address consumer contract from Remix to the subscription
+    constructor(
+        address vrfCoordinatorV2,
+        uint256 participationFee,
+        bytes32 gasLane,
+        uint64 subscriptionId,
+        uint32 callbackGasLimit
+    )
+        VRFConsumerBaseV2(vrfCoordinatorV2) // Interface + Address => Consumer contract to interact with.
+    {
         i_participationFee = participationFee;
+        i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2); // Interface + Address => Coordinator contract to interact with
+        i_gasLane = gasLane;
+        i_subscriptionId = subscriptionId;
+        i_callbackGasLimit = callbackGasLimit;
     }
 
     // enter Lottery
@@ -30,7 +53,23 @@ contract Lottery {
         emit LotteryEnter(msg.sender);
     }
 
-    //function pickRandomWinner() public {}
+    //... computed from VRFCoordinatorV2Interface.sol
+    function requestRandomWinner() external {
+        uint256 requestId = i_vrfCoordinator.requestRandomWords(
+            i_gasLane, // or gasLane in wei, max gas price to pay for a random request
+            i_subscriptionId, // ID of the subscription used to fund the VRFConsumerBaseV2(vrfCoordinatorV2) contract
+            REQUEST_CONFIRMATIONS, // how many blocks to wait before recieving the random number response
+            i_callbackGasLimit, // max gas limit for the computation of fulfillRandomWords() function
+            NUM_WORDS // nber of random number we want per request
+        );
+        emit RequestedLotteryWinner(requestId);
+    }
+
+    // computed from VRFConsumerBaseV2.sol
+    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords)
+        internal
+        override
+    {}
 
     /** VIEW & | PURE functions */
     // read fee
