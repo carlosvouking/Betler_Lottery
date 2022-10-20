@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/carlnerd2004/home/BLOCKCHAIn/Betlr_Lottery/BACK_Betlr/contracts/Lottery.sol": {
-      "lastModificationDate": 1666217698474,
-      "contentHash": "18d9a00eb36b9bb9a3c18d7f9b60a47f",
+      "lastModificationDate": 1666260372425,
+      "contentHash": "fb9cc8fc0c075489fbc1e6528aebbebd",
       "sourceName": "contracts/Lottery.sol",
       "solcConfig": {
         "version": "0.8.9",
