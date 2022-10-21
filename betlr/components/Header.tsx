@@ -17,9 +17,8 @@ import Marquee from "react-fast-marquee"
 
 import ylogo from "../images/Y_logo.png"
 
-
 function Header() {
-    const { enableWeb3, account, isWeb3Enabled, deactivateWeb3  } = useMoralis()
+    const { enableWeb3, account, isWeb3Enabled, deactivateWeb3, user } = useMoralis()
 
     return (
         <header className="grid grid-cols-2 md:grid-cols-5 justify-between items-center p-5">
@@ -28,8 +27,12 @@ function Header() {
                     <Image priority src={ylogo} className="rounded-xl" />
                 </div> */}
                 <div className="flex flex-col">
-                    <h1 className="text-yellow-500 text-lg font-bold text-center">DECENTRALIZED RAPHL</h1>
-                    <span className="text-stone-300 text-sm text-center">Fair - Transparent - Secure</span>
+                    <h1 className="text-yellow-500 text-lg font-bold text-center">
+                        DECENTRALIZED RAPHL
+                    </h1>
+                    <span className="text-stone-300 text-sm text-center">
+                        Fair - Transparent - Secure
+                    </span>
                     {/* <p className="text-white text-sm ">
                         Connected folks:
                         <b className="text-yellow-200">{shortenAddress(account)}</b>

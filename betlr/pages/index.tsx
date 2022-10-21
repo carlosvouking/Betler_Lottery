@@ -68,28 +68,38 @@ const Home: NextPage = () => {
             </Head>
 
             <div className="flex-1">
-                {account ? <Header /> : <Login />}
-
-                {/* {isRaffleOperator === address && ( */}
-                {account ? (
-                    <div className="flex justify-center mt-5 mb-5 ml-20 mr-20">
-                        <AdminControls />
-                    </div>
+                {!account ? (
+                    <Login />
                 ) : (
                     <div>
-                        <h3>Admin control deactivated</h3>
+                        <Header />
+                        {/* {isRaffleOperator === address && ( */}
+                        <div className="flex justify-center mt-5 mb-5 ml-20 mr-20">
+                            <AdminControls />
+                        </div>
+                        <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5 md:ml-20 md:mr-20">
+                            <RaffleEntrance />
+                            <NextPick />
+                        </div>
                     </div>
                 )}
 
-           
-                    {/* <Marquee className="bg-[#292919]" gradient={false} speed={40}>
+                {/* {isRaffleOperator === address && ( */}
+                {/* {!account ? (
+                    <div>{ <h3>Admin control deactivated</h3> }</div>
+                ) : (
+                    <div className="flex justify-center mt-5 mb-5 ml-20 mr-20">
+                        <AdminControls />
+                    </div>
+                )} */}
+
+                {/* <Marquee className="bg-[#292919]" gradient={false} speed={40}>
                         <div className="flex space-x-2 mx-10">
                             <h4 className="text-orange-200 font-bold">
                                 ** Most recent winner: ...
                             </h4>
                         </div>
                     </Marquee> */}
-         
 
                 {/* <div className="max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5">
                     <button className="p-5 bg-gradient-to-tr from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full">
@@ -99,11 +109,12 @@ const Home: NextPage = () => {
                         <p className="font-semibold">Withdraw your earnings here</p>
                     </button>
                 </div> */}
-
-                <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5 md:ml-20 md:mr-20">
-                    <RaffleEntrance />
-                    <NextPick />
-                </div>
+                {/* {!account ? null : (
+                    <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5 md:ml-20 md:mr-20">
+                        <RaffleEntrance />
+                        <NextPick />
+                    </div>
+                )} */}
             </div>
         </div>
     )
