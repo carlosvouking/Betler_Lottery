@@ -1,3 +1,10 @@
+/** CONTRACT MAIN GOALS */
+// 1- Allow anyone to enter the lottery by paying a certain amount in ETH
+// 2- Select / Pick a random winner manually - Admin control
+// 3- Select / Pick a random winner manually - randomly verfiable
+// 4- Allow winner to be picked every (... minutes) randomly
+// 5- Using Chainlink Oracle tools for randomness (VRF) and Automation (Automation / Keepers)
+
 //SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.8;
