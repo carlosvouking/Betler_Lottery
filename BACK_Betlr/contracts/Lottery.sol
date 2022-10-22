@@ -4,12 +4,22 @@ pragma solidity ^0.8.8;
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
+//import "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
 
 error Lottery__InsufficientParticipationFees();
-error Lottery__WinnerTransferFundsFailed();
+error Lottery__TrasnferFundsToWinnerFailed();
+error Lottery__LotteryNotOpen();
 
-contract Lottery is VRFConsumerBaseV2 {
-    /**State variable */
+contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
+    /** Declaring types */
+    enum LotteryState {
+        OPEN, // 0
+        PROCESSING, // 1
+        CLOSE //2
+    }
+
+    /**State variables */
     // minimum participation
     uint256 private immutable i_participationFee;
     // participants
@@ -22,8 +32,11 @@ contract Lottery is VRFConsumerBaseV2 {
     uint32 private immutable i_callbackGasLimit;
     uint32 private constant NUM_WORDS = 1;
 
-    // Rafffle related state variables
+    // Raffle related state variables
     address private s_recentRandomWinner; // voorlopig empty = no random winner momenteel
+    LotteryState private s_lotteryState;
+    uint256 private s_previousTimeStamp;
+    uint256 private immutable i_interval; // how long is sec we want to wait between lottery runs...
 
     /**Events */
     event LotteryEnter(address indexed player);
@@ -36,15 +49,20 @@ contract Lottery is VRFConsumerBaseV2 {
         uint256 participationFee,
         bytes32 gasLane,
         uint64 subscriptionId,
-        uint32 callbackGasLimit
+        uint32 callbackGasLimit,
+        uint256 interval
     )
         VRFConsumerBaseV2(vrfCoordinatorV2) // Interface + Address => Consumer contract to interact with.
+        AutomationCompatibleInterface()
     {
         i_participationFee = participationFee;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2); // Interface + Address => Coordinator contract to interact with
         i_gasLane = gasLane;
         i_subscriptionId = subscriptionId;
         i_callbackGasLimit = callbackGasLimit;
+        s_lotteryState = LotteryState.OPEN; // open the lottery at contract deployment
+        s_previousTimeStamp = block.timestamp; // vlue saved in storage as soon contract loads.
+        i_interval = interval;
     }
 
     // enter Lottery
@@ -53,6 +71,10 @@ contract Lottery is VRFConsumerBaseV2 {
         if (msg.value < i_participationFee) {
             revert Lottery__InsufficientParticipationFees(); // revert the whole transaction
         }
+        // enter the lottery only if it's opened
+        if (s_lotteryState != LotteryState.OPEN) {
+            revert Lottery__LotteryNotOpen();
+        }
         s_participants.push(payable(msg.sender));
         // Emit Events... very useful when updating dynamic data structures:: mappings, arrays etc...
         emit LotteryEnter(msg.sender);
@@ -60,6 +82,8 @@ contract Lottery is VRFConsumerBaseV2 {
 
     //... computed from VRFCoordinatorV2Interface.sol
     function requestRandomWinner() external {
+        // Random winner is being processed...
+        s_lotteryState = LotteryState.PROCESSING;
         uint256 requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane, // or gasLane in wei, max gas price to pay for a random request
             i_subscriptionId, // ID of the subscription used to fund the VRFConsumerBaseV2(vrfCoordinatorV2) contract
@@ -77,7 +101,7 @@ contract Lottery is VRFConsumerBaseV2 {
     ) internal override {
         /*
            % modulo scenario to get the random winner: 
-            // s_players = [56, 789, 402, 78, 3254, 202, 91, 6587, 80, 65]
+            // s_players = [56, 789, 402, 78, 3254, 202, 91, 6587, 81, 65]
             // random number to be picked: 402
             // to goal of the modulo is to find the index of the random nmber to be picked
             randomWords[0] % s_players.length = indexRandomNumber
@@ -87,10 +111,16 @@ contract Lottery is VRFConsumerBaseV2 {
         address payable recentRandomWinner = s_participants[indexOfRandomWinner]; // this is our very verifiably random winner.
         s_recentRandomWinner = recentRandomWinner;
 
+        // re-open the Lottery after picking a winner
+        s_lotteryState = LotteryState.OPEN;
+
+        // reset the participants list to zero
+        s_participants = new address payable[](0);
+
         // send the money to the winner
         bool success;
         if (!success) {
-            revert Lottery__WinnerTransferFundsFailed();
+            revert Lottery__TrasnferFundsToWinnerFailed();
         } else {
             (success, ) = recentRandomWinner.call{value: address(this).balance}(" ");
         }
@@ -98,8 +128,42 @@ contract Lottery is VRFConsumerBaseV2 {
         emit randomWinnerPicked(recentRandomWinner);
     }
 
+    /**
+     *  @dev cette function est invokée par le node chainlink. should normally UpkeepNeeded return 'true'
+     * Les conditions suivantes doivent être vraies pour que 'UpkeepNeeded' == true
+     * 1rst condition:: L'interval de temps devra être écoulé
+     * 2nd condition::  Il faudrait au moins un participant enregistré dans la lotterie
+     * 3rd condition::  la souscription Chainlink doit avoir assez de LINK
+     * 4th condition::  La lotterie doit être encore en ouverte....Techniquement don't allow any new player to enter
+                        the lottery when waiting for the ranom winner.
+
+        // checkData parameter can be very useful in making many advance things...                
+     */
+
+    function checkUpkeep(
+        bytes calldata /*checkData*/
+    )
+        public
+        override
+        returns (
+            bool upKeepNeeded,
+            bytes memory /*performData*/
+        )
+    {
+        // isLoterryOpen is true if the state is on OPEN state otherwise isLotteryOpen is false.
+        bool isLotteryOpen = (LotteryState.OPEN == s_lotteryState);
+        // check time interval between the previous block and the curent block timestamp...is true is enough time has passed
+        bool elapsedTime = (i_interval < (block.timestamp - s_previousTimeStamp));
+        // check at least 1 participant exists
+        bool hasParticipant_s = (s_participants.length > 0);
+        // check balance in LINK
+        bool hasBalanceInLink = address(this).balance > 0;
+        // returning UpkeepNeeded is all of above conditions are true..it's time to request a new random number and to close the lottery
+        upKeepNeeded = (isLotteryOpen && elapsedTime && hasParticipant_s && hasBalanceInLink);
+    }
+
     /** VIEW & | PURE functions */
-    // read fee
+    // read fee to enter the lottery
     function getParticipationFee() public view returns (uint256) {
         return i_participationFee;
     }
