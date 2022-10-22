@@ -5,21 +5,31 @@ pragma solidity ^0.8.8;
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
-//import "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
 
 error Lottery__InsufficientParticipationFees();
 error Lottery__TrasnferFundsToWinnerFailed();
 error Lottery__LotteryNotOpen();
+error Lottery__CheckUpkeepFailed(
+    uint256 currentLotteryState,
+    uint256 numberParticipants,
+    uint256 currentBalance
+);
 
+/** @title Basic lottery contract
+ * @author Carlos Vouking guided by Patrick Collins
+ * @notice basic contract for a decentralized truly fair lottery
+ * @dev made possible with chainlink vrf V2 subscription version and chainlink automation - keepers
+ */
 contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
-    /** Declaring types */
+    /** DECLARING TYPES */
     enum LotteryState {
         OPEN, // 0
         PROCESSING, // 1
         CLOSE //2
     }
 
-    /**State variables */
+    /** STATE VARIABLES */
     // minimum participation
     uint256 private immutable i_participationFee;
     // participants
@@ -38,10 +48,12 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
     uint256 private s_previousTimeStamp;
     uint256 private immutable i_interval; // how long is sec we want to wait between lottery runs...
 
-    /**Events */
+    /**EVENTS */
     event LotteryEnter(address indexed player);
     event RequestedLotteryWinner(uint256 indexed requestId);
     event randomWinnerPicked(address indexed winnerPicked);
+
+    /** FUNCTIONS */
 
     // initializing items at contract deployment....vrfCoordinatorV2= address consumer contract from Remix to the subscription
     constructor(
@@ -117,12 +129,15 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         // reset the participants list to zero
         s_participants = new address payable[](0);
 
-        // send the money to the winner
+        // reset previous timestamp evert time a winner is picked to allow participation in a new interval
+        s_previousTimeStamp = block.timestamp;
+
+        // transfer the money to the winner
         bool success;
         if (!success) {
             revert Lottery__TrasnferFundsToWinnerFailed();
         } else {
-            (success, ) = recentRandomWinner.call{value: address(this).balance}(" ");
+            (success, ) = recentRandomWinner.call{value: address(this).balance}("");
         }
         // write every random winner to the event log, so that we can query them previous winners at any time
         emit randomWinnerPicked(recentRandomWinner);
@@ -139,15 +154,14 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
 
         // checkData parameter can be very useful in making many advance things...                
      */
-
     function checkUpkeep(
-        bytes calldata /*checkData*/
+        bytes memory /* checkData */
     )
         public
         override
         returns (
-            bool upKeepNeeded,
-            bytes memory /*performData*/
+            bool upkeepNeeded,
+            bytes memory /* performData */
         )
     {
         // isLoterryOpen is true if the state is on OPEN state otherwise isLotteryOpen is false.
@@ -159,7 +173,38 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         // check balance in LINK
         bool hasBalanceInLink = address(this).balance > 0;
         // returning UpkeepNeeded is all of above conditions are true..it's time to request a new random number and to close the lottery
-        upKeepNeeded = (isLotteryOpen && elapsedTime && hasParticipant_s && hasBalanceInLink);
+        upkeepNeeded = (isLotteryOpen && elapsedTime && hasParticipant_s && hasBalanceInLink);
+        //return (upkeepNeeded, "0x0");
+    }
+
+    /**
+     *  @dev this function calls the 'checkUpKeep()' and excecutes if upKeepNeeded is true.
+     * returns an error is lottery is not open || if there are zero participants || if the subscription is empty.
+     */
+    function performUpkeep(
+        bytes calldata /* performData */
+    ) external override {
+        // upkeepNeeded should be 'true' to proceed..need to call 'checkUpkeep' to get the value of 'upKeepNeeded'
+        (bool upkeepNeeded, ) = checkUpkeep("");
+        if (!upkeepNeeded) {
+            revert Lottery__CheckUpkeepFailed(
+                uint256(s_lotteryState),
+                s_participants.length,
+                address(this).balance
+            );
+        } else {
+            /* execute requestRandomWinner()  */
+            // Random winner is being processed...
+            s_lotteryState = LotteryState.PROCESSING;
+            uint256 requestId = i_vrfCoordinator.requestRandomWords(
+                i_gasLane, // or gasLane in wei, max gas price to pay for a random request
+                i_subscriptionId, // ID of the subscription used to fund the VRFConsumerBaseV2(vrfCoordinatorV2) contract
+                REQUEST_CONFIRMATIONS, // how many blocks to wait before recieving the random number response
+                i_callbackGasLimit, // max gas limit for the computation of fulfillRandomWords() function
+                NUM_WORDS // nber of random number we want per request
+            );
+            emit RequestedLotteryWinner(requestId);
+        }
     }
 
     /** VIEW & | PURE functions */
@@ -176,5 +221,35 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
     // read the recent random winner
     function getRecentRandomWinner() public view returns (address) {
         return s_recentRandomWinner;
+    }
+
+    // state of the lottery
+    function getLotteryState() public view returns (LotteryState) {
+        return s_lotteryState;
+    }
+
+    // get the number of words recieved...NUM_WORDS is read from bytecode. It is not in storage.
+    function getNumberOfWords() public pure returns (uint256) {
+        return NUM_WORDS; // return 1
+    }
+
+    // get number of participants
+    function getNumberOfParticipants() public view returns (uint256) {
+        return s_participants.length;
+    }
+
+    // participants' list
+    function getParticipants() public view returns (address payable[] memory) {
+        return s_participants;
+    }
+
+    // current latest timestamp
+    function getLatesttimeStamp() public view returns (uint256) {
+        return s_previousTimeStamp;
+    }
+
+    // request confirmations - nber of blocks confirmations -- reading from bytecode
+    function getRequestConfirmations() public pure returns (uint256) {
+        return REQUEST_CONFIRMATIONS; // return 3
     }
 }
