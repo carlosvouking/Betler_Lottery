@@ -64,7 +64,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
 
     // initializing items at contract deployment....vrfCoordinatorV2= address consumer contract from Remix to the subscription
     constructor(
-        address vrfCoordinatorV2,
+        address vrfCoordinatorV2, // contract...will be deployed as a Mock
         uint256 participationFee,
         bytes32 gasLane,
         uint64 subscriptionId,
