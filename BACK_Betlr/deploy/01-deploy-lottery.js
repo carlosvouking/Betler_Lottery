@@ -1,17 +1,17 @@
 const { network, ethers } = require("hardhat")
-const { verify } = require("../hardhat.config")
+const { verify } = require("../utils/verify")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
 
-const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("5")
+const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("5") // 5 Ether, or 5e18 (10^18) Wei
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deployer } = await getNamedAccounts()
     const { log, deploy } = deployments
     const chainId = network.config.chainId
     // 1rst argument in constructor
-    let vrfCoordinatorV2Address, subscriptionId
+    let vrfCoordinatorV2Address, subscriptionId, vrfCoordinatorV2Mock
 
-    // if on develpment chains, deploy mock and save the address of the deployed mock contract
+    // if on develpment chains, deploy mock and save the address of the deployed mock contract...31337
     if (developmentChains.includes(network.name)) {
         const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
@@ -40,6 +40,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     // last argument in contructor
     const interval = networkConfig[chainId]["interval"]
 
+    log("----------------------------------------------------")
+
     const arguments = [
         vrfCoordinatorV2Address,
         participationFee,
@@ -49,6 +51,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         interval,
     ]
 
+    // actually deploying here...
     const lottery = await deploy("Lottery", {
         from: deployer,
         args: arguments,
@@ -66,12 +69,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     // Verifying the contract on ETherscan
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying contract...")
-        await verify(lottery.address, args)
+        await verify(lottery.address, arguments)
     }
 
-    log(
-        "-------------------*---------------------*--------------------*-------------------*---------------------*--------------------"
-    )
+    log("Enter lottery with command:")
+    const networkName = network.name == "hardhat" ? "localhost" : network.name
+    log(` yarn hardhat run scripts/enterLottery.js --network ${networkName}`)
+    log("--------------*---------------*-----------------*---------------*----------------")
     log("")
 }
 

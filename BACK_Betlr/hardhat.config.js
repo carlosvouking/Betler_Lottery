@@ -41,7 +41,7 @@ module.exports = {
         localhost: {
             chainId: 31337,
         },
-        goërli: {
+        goerli: {
             chainId: 5,
             blockConfirmations: 6,
             url: GOERLI_RPC_URL,
@@ -65,9 +65,9 @@ module.exports = {
         deployer: {
             default: 0,
         },
-        // participant: {
-        //     default: 1,
-        // },
+        participant: {
+            default: 1,
+        },
     },
     mocha: {
         timeout: 300000, // 200 seconds max for running tests
