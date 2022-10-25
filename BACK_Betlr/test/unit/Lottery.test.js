@@ -3,6 +3,7 @@ const { assert, expect } = require("chai")
 const { ethers, getNamedAccounts, deployments, network } = require("hardhat")
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 
+// we should be on developmentChains...no testnet
 !developmentChains.includes(network.name)
     ? describe.skip
     : describe("Lottery Unit Tests", () => {
@@ -196,7 +197,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   // Also before the vents gets fired, 'performUpkeep' and 'fulfillRandomWords' should be called
                   await new Promise(async (resolve, reject) => {
                       //setting up a listener to the randomWinnerPicked event
-                      lottery.once("randomWinnerPicked", async () => {
+                      lottery.once("RandomWinnerPicked", async () => {
                           console.log("Yéééh, event found -- a random winner is picked")
                           try {
                               const recentRandomWinner = await lottery.getRecentRandomWinner()
@@ -209,7 +210,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                               console.log(accounts[1].address)
                               console.log(accounts[3].address)
 
-                              const lotteryState = await lottery.lotteryState()
+                              const lotteryState = await lottery.getLotteryState()
                               const endingTimeStamp = await lottery.getLatestTimeStamp()
                               const numberParticipants = await lottery.getNumberOfParticipants()
                               assert.equal(numberParticipants.toString(), "0") // no participants at this stage
@@ -218,14 +219,14 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                           } catch (e) {
                               reject(e) // takes more than 300 seconds ... rejects the promise
                           }
+                          resolve() // resolve the promise if try passes
                       })
-                      resolve() // resolve the promise if try passes
 
-                      // kick-off the randomWinnerPicked event Mocking the chainlink keeper automation
+                      // kick-off the RandomWinnerPicked event Mocking the chainlink keeper automation
                       const transaction = await lottery.performUpkeep("0x")
                       const transactionReceipt = transaction.wait(1)
 
-                      //Kick-off the randomWinnerPicked event Mocking the chainlink VRF
+                      //Kick-off the RandomWinnerPicked event Mocking the chainlink VRF
                       await vrfCoordinatorV2Mock.fulfillRandomWords(
                           transactionReceipt.events[1].args.requestId,
                           lottery.address

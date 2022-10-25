@@ -2,11 +2,11 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/carlnerd2004/home/BLOCKCHAIn/Betlr_Lottery/BACK_Betlr/contracts/Lottery.sol": {
-      "lastModificationDate": 1666656979599,
-      "contentHash": "c74cb95d27cb7dacfacef2ad147f36bb",
+      "lastModificationDate": 1666695258564,
+      "contentHash": "660c00da503a7624ae98767a0453cf9f",
       "sourceName": "contracts/Lottery.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -31,7 +31,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -53,7 +53,7 @@
       "contentHash": "eb9cc526ef59dfc4d644f56ddca0633a",
       "sourceName": "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -78,7 +78,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -95,7 +95,7 @@
       "contentHash": "8c9ed3426b676f67ee200a2bec96e224",
       "sourceName": "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -120,7 +120,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -137,7 +137,7 @@
       "contentHash": "c962c53a75d722542c83859d848edd5b",
       "sourceName": "@chainlink/contracts/src/v0.8/AutomationCompatible.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -162,7 +162,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -182,7 +182,7 @@
       "contentHash": "80067f44d8bddd615599f8d73b9726a5",
       "sourceName": "@chainlink/contracts/src/v0.8/AutomationBase.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -207,7 +207,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -224,7 +224,7 @@
       "contentHash": "c52969cee392918edbf23f914e01c0dc",
       "sourceName": "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -249,7 +249,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -266,7 +266,7 @@
       "contentHash": "a78f72f6c18077e727bc06d7f96b2031",
       "sourceName": "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -291,7 +291,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -312,7 +312,7 @@
       "contentHash": "da5a0c3bd86c896f6a407f909c57edf3",
       "sourceName": "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -337,7 +337,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -354,7 +354,7 @@
       "contentHash": "a6d1949b0e752c7620cef64c3686b299",
       "sourceName": "contracts/test-mocks/VRFCoordinatorV2Mock.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.8",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -379,7 +379,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },

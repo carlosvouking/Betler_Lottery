@@ -7,7 +7,6 @@ require("hardhat-contract-sizer")
 require("dotenv").config()
 
 // URLs
-const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL
 const MAINNET_RPC_URL =
     process.env.MAINNET_RPC_URL ||
     process.env.ALCHEMY_MAINNET_RPC_URL ||
@@ -20,11 +19,19 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-    solidity: "0.8.9",
-    // solidity: {
-    //     compilers: [{ version: "0.8.9" }, { version: "0.8.4" }],
-    // },
-
+    solidity: {
+        compilers: [
+            {
+                version: "0.8.8",
+            },
+            {
+                version: "0.8.4",
+            },
+            {
+                version: "0.4.24",
+            },
+        ],
+    },
     defaultNetwork: "hardhat",
     networks: {
         hardhat: {
@@ -33,12 +40,6 @@ module.exports = {
         },
         localhost: {
             chainId: 31337,
-        },
-        mainnet: {
-            chainId: 4,
-            blockConfirmations: 6,
-            url: RINKEBY_RPC_URL,
-            accounts: [PRIVATE_KEY],
         },
         goërli: {
             chainId: 5,
@@ -64,14 +65,11 @@ module.exports = {
         deployer: {
             default: 0,
         },
-        participant: {
-            default: 1,
-        },
-        admin: {
-            default: 2,
-        },
+        // participant: {
+        //     default: 1,
+        // },
     },
     mocha: {
-        timeout: 300000, // 300 seconds max for running tests
+        timeout: 300000, // 200 seconds max for running tests
     },
 }

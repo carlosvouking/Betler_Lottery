@@ -58,7 +58,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
     /**EVENTS */
     event LotteryEnter(address indexed player);
     event RequestedLotteryWinner(uint256 indexed requestId);
-    event randomWinnerPicked(address indexed winnerPicked);
+    event RandomWinnerPicked(address indexed winnerPicked);
 
     /** FUNCTIONS */
 
@@ -148,7 +148,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
             (success, ) = recentRandomWinner.call{value: address(this).balance}("");
         }
         // write every random winner to the event log, so that we can query them previous winners at any time
-        emit randomWinnerPicked(recentRandomWinner);
+        emit RandomWinnerPicked(recentRandomWinner);
     }
 
     /**
