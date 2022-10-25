@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/carlnerd2004/home/BLOCKCHAIn/Betlr_Lottery/BACK_Betlr/contracts/Lottery.sol": {
-      "lastModificationDate": 1666469368324,
-      "contentHash": "132e9e9aa2e5d8b8ec68c64ffc5014ee",
+      "lastModificationDate": 1666656979599,
+      "contentHash": "c74cb95d27cb7dacfacef2ad147f36bb",
       "sourceName": "contracts/Lottery.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -46,50 +46,6 @@
       ],
       "artifacts": [
         "Lottery"
-      ]
-    },
-    "/home/carlnerd2004/home/BLOCKCHAIn/Betlr_Lottery/BACK_Betlr/contracts/RRaffle.sol": {
-      "lastModificationDate": 1666032071947,
-      "contentHash": "7e0eda772241985f43be072e6e070faf",
-      "sourceName": "contracts/RRaffle.sol",
-      "solcConfig": {
-        "version": "0.8.9",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "RRaffle"
       ]
     },
     "/home/carlnerd2004/home/BLOCKCHAIn/Betlr_Lottery/BACK_Betlr/node_modules/@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol": {

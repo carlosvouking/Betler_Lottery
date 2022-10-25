@@ -56,6 +56,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         waitConfirmations: network.config.blockConfirmations || 1,
     })
 
+    if (chainId == 31337) {
+        const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
+        await vrfCoordinatorV2Mock.addConsumer(subscriptionId.toNumber(), lottery.address)
+        log("adding consumer...")
+        log("Consumer added!")
+    }
+
     // Verifying the contract on ETherscan
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying contract...")

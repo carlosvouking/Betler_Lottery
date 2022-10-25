@@ -128,6 +128,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         */
         uint256 indexOfRandomWinner = randomWords[0] % s_participants.length;
         address payable recentRandomWinner = s_participants[indexOfRandomWinner]; // this is our very verifiably random winner.
+        // assign / pick a recent winner
         s_recentRandomWinner = recentRandomWinner;
 
         // re-open the Lottery after picking a winner
@@ -178,9 +179,9 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         // check at least 1 participant exists
         bool hasParticipant_s = (s_participants.length > 0);
         // check balance in LINK
-        bool hasBalanceInLink = address(this).balance > 0;
+        bool hasBalance = address(this).balance > 0;
         // returning UpkeepNeeded is all of above conditions are true..it's time to request a new random number and to close the lottery
-        upkeepNeeded = (isLotteryOpen && elapsedTime && hasParticipant_s && hasBalanceInLink);
+        upkeepNeeded = (isLotteryOpen && elapsedTime && hasParticipant_s && hasBalance);
         //return (upkeepNeeded, "0x0");
     }
 
@@ -251,12 +252,17 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
     }
 
     // current latest timestamp
-    function getLatesttimeStamp() public view returns (uint256) {
+    function getLatestTimeStamp() public view returns (uint256) {
         return s_previousTimeStamp;
     }
 
     // request confirmations - nber of blocks confirmations -- reading from bytecode
     function getRequestConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS; // return 3
+    }
+
+    // get interval
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }

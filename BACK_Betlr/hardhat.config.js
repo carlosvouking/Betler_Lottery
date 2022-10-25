@@ -47,9 +47,17 @@ module.exports = {
             accounts: [PRIVATE_KEY],
         },
     },
-    // etherscan: {
-    //     apiKey: ETHERSCAN_API_KEY,
-    // },
+    etherscan: {
+        apiKey: ETHERSCAN_API_KEY,
+    },
+
+    gasReporter: {
+        enabled: false, // REPORT_GAS,
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
+        // coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    },
 
     // separate many users interacting with the contract.
     namedAccounts: {
@@ -62,5 +70,8 @@ module.exports = {
         admin: {
             default: 2,
         },
+    },
+    mocha: {
+        timeout: 300000, // 300 seconds max for running tests
     },
 }
