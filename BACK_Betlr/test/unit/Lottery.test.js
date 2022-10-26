@@ -172,7 +172,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               it("picks a winner, reset the lottery, and transfer money to winner", async () => {
                   // adding additional participants (some fake accounts from ethers) to the lottery
                   const additionalParticipants = 3
-                  const startingAccountIndex = 1 // set the new fake accounts starting at index 1 --- deployer is at index 0
+                  const startingAccountIndex = 2 // set the new fake accounts starting at index 1 --- deployer is at index 0
                   const accounts = await ethers.getSigners()
 
                   for (
@@ -196,39 +196,52 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   //   ... we need to have a listener (as a promise) which listens so that once the a winner is picked
                   // Also before the vents gets fired, 'performUpkeep' and 'fulfillRandomWords' should be called
                   await new Promise(async (resolve, reject) => {
-                      //setting up a listener to the randomWinnerPicked event
                       lottery.once("RandomWinnerPicked", async () => {
-                          console.log("Yéééh, event found -- a random winner is picked")
+                          // event listener for RandomWinnerPicked
+                          console.log("RandomWinnerPicked event fired !")
+                          // assert throws an error if it fails, so we need to wrap
+                          // it in a try/catch so that the promise returns event
+                          // if it fails.
                           try {
-                              const recentRandomWinner = await lottery.getRecentRandomWinner()
-                              // print our recent winner
-                              console.log("winner:", recentRandomWinner)
-                              console.log("----------*----------------*-----------------*")
-                              // print participants addresses
-                              console.log(accounts[2].address)
+                              // Now lets get the ending values...
+                              const recentWinner = await lottery.getRecentRandomWinner()
+                              console.log(`the Last winner was : ${recentWinner}`)
+
                               console.log(accounts[0].address)
                               console.log(accounts[1].address)
+                              console.log(accounts[2].address)
                               console.log(accounts[3].address)
 
                               const lotteryState = await lottery.getLotteryState()
+                              const winnerBalance = await accounts[2].getBalance()
                               const endingTimeStamp = await lottery.getLatestTimeStamp()
-                              const numberParticipants = await lottery.getNumberOfParticipants()
-                              assert.equal(numberParticipants.toString(), "0") // no participants at this stage
-                              assert.equal(lotteryState.toString(), "0") //lottery state reset to index 0 (OPEN)
+                              await expect(lottery.getParticipant(0)).to.be.reverted
+                              // Comparisons to check if our ending values are correct:
+                              assert.equal(recentWinner.toString(), accounts[2].address)
+                              assert.equal(lotteryState, 0)
+                              assert.equal(
+                                  winnerBalance.toString(),
+                                  startingBalance // startingBalance + ( (lotteryParticipationFee * additionalParticipants) + lotteryParticipationFee )
+                                      .add(
+                                          lotteryParticipationFee
+                                              .mul(additionalParticipants)
+                                              .add(lotteryParticipationFee)
+                                      )
+                                      .toString()
+                              )
                               assert(endingTimeStamp > startingTimeStamp)
+                              resolve() // if try passes, resolves the promise
                           } catch (e) {
-                              reject(e) // takes more than 300 seconds ... rejects the promise
+                              reject(e) // if try fails, rejects the promise
                           }
-                          resolve() // resolve the promise if try passes
                       })
 
-                      // kick-off the RandomWinnerPicked event Mocking the chainlink keeper automation
-                      const transaction = await lottery.performUpkeep("0x")
-                      const transactionReceipt = transaction.wait(1)
-
-                      //Kick-off the RandomWinnerPicked event Mocking the chainlink VRF
+                      // kicking off the event by mocking the chainlink keepers and vrf coordinator
+                      const tx = await lottery.performUpkeep("0x")
+                      const txReceipt = await tx.wait(1)
+                      const startingBalance = await accounts[2].getBalance()
                       await vrfCoordinatorV2Mock.fulfillRandomWords(
-                          transactionReceipt.events[1].args.requestId,
+                          txReceipt.events[1].args.requestId,
                           lottery.address
                       )
                   })

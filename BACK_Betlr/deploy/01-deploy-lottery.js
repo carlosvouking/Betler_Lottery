@@ -26,29 +26,15 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         subscriptionId = networkConfig[chainId]["subscriptionId"]
     }
 
-    // 2nd argument in constructor
-    const participationFee = networkConfig[chainId]["participationFee"]
-
-    // 3rd argument in contructor
-    const gasLane = networkConfig[chainId]["gasLane"]
-
-    //4th argumrnt in constructor  -- subscriptionId
-
-    // 5th argument  in constructor
-    const callbackGasLimit = networkConfig[chainId]["callbackGasLimit"]
-
-    // last argument in contructor
-    const interval = networkConfig[chainId]["interval"]
-
     log("----------------------------------------------------")
 
     const arguments = [
         vrfCoordinatorV2Address,
-        participationFee,
-        gasLane,
+        networkConfig[chainId]["participationFee"],
+        networkConfig[chainId]["gasLane"],
         subscriptionId,
-        callbackGasLimit,
-        interval,
+        networkConfig[chainId]["callbackGasLimit"],
+        networkConfig[chainId]["interval"],
     ]
 
     // actually deploying here...

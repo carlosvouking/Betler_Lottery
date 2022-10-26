@@ -28,7 +28,7 @@ module.exports = {
                 version: "0.8.4",
             },
             {
-                version: "0.4.24",
+                version: "0.8.0",
             },
         ],
     },
@@ -70,6 +70,6 @@ module.exports = {
         },
     },
     mocha: {
-        timeout: 300000, // 200 seconds max for running tests
+        timeout: 500000, // 500 seconds max for running tests
     },
 }

@@ -141,11 +141,9 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         s_previousTimeStamp = block.timestamp;
 
         // transfer the money to the winner
-        bool success;
+        (bool success, ) = recentRandomWinner.call{value: address(this).balance}("");
         if (!success) {
             revert Lottery__TrasnferFundsToWinnerFailed();
-        } else {
-            (success, ) = recentRandomWinner.call{value: address(this).balance}("");
         }
         // write every random winner to the event log, so that we can query them previous winners at any time
         emit RandomWinnerPicked(recentRandomWinner);

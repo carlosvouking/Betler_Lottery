@@ -14,7 +14,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     if (developmentChains.includes(network.name)) {
         log("")
         log(" --> Local development chain was detected --> Now deploying mocks !")
-        // then we deploy a mock or a copy vrfCoordinator...but where do we get a mock for vrfCoordinator ?  ... from v0.8/mocks/VRFCoordinatorV2Mock.sol
+        // then we deploy a mock or a copy vrfCoordinator...but where do we get a mock for vrfCoordinator ?
+        // ... from v0.8/mocks/VRFCoordinatorV2Mock.sol
         await deploy("VRFCoordinatorV2Mock", {
             contract: "VRFCoordinatorV2Mock",
             from: deployer,
