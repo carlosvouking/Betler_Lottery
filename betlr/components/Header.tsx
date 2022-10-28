@@ -52,9 +52,8 @@ function Header() {
 
             <div className="hidden items-center justify-center md:col-span-3 md:flex">
                 <div className="bg-[text-yellow-50] p-4 space-x-2">
-                    <NavButton isActive title="Enter Raffle" />
+                    <NavButton isActive title="Enter Lottery" />
                     <NavButton title="Disconnect Wallet" />
-                    {/* <button onClick={deactivateWeb3}>Disconnect</button> */}
                 </div>
             </div>
 

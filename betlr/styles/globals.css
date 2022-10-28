@@ -10,7 +10,7 @@
     }
 
     .raffleStats-wrapper {
-       @apply bg-[#252510] p-5 rounded-lg border-[#4e5755] flex-1
+       @apply bg-[#252510] p-5 rounded-lg border-[#4e5755] flex-1 
     }
 
     .countdown {

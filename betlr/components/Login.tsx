@@ -4,7 +4,7 @@ import { useMoralis } from "react-moralis"
 import { ConnectButton } from "web3uikit"
 import { PropagateLoader } from "react-spinners"
 
-import ylogo from "../images/animated.svg"
+import ylogo from "../images/logo_fryc_io.png"
 
 function Login() {
     const { enableWeb3, account, isWeb3Enabled, isWeb3EnableLoading } = useMoralis()
@@ -18,9 +18,9 @@ function Login() {
     return (
         <div className="flex flex-col min-h-screen justify-center items-center text-center">
             <div className="items-center mb-10">
-                <Image className="rounded" width={250} height={150} priority src={ylogo} />
+                {/* <Image className="rounded" width={250} height={150} priority src={ylogo} /> */}
                 <h1 className="text-yellow-500 text-3xl font-bold">DECENTRALIZED RAPHL</h1>
-                <h2 className="text-white mb-5">Link a wallet account to participate</h2>
+                <h2 className="text-white mb-5">Please, Link a wallet account to participate</h2>
                 {/* <button
                     className="rounded-lg bg-white font-bold shadow-lg py-5 px-8"
                     onClick={connect}

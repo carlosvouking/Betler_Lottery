@@ -63,7 +63,7 @@ const Home: NextPage = () => {
     return (
         <div className="bg-[#1a1a0c] min-h-screen flex flex-col">
             <Head>
-                <title>Decent Lottery</title>
+                <title>Decentralized Raphl</title>
                 {/* <link rel="icon" href="favicon" /> */}
             </Head>
 
