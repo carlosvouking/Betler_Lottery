@@ -26,8 +26,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         subscriptionId = networkConfig[chainId]["subscriptionId"]
     }
 
-    log("----------------------------------------------------")
-
     const arguments = [
         vrfCoordinatorV2Address,
         networkConfig[chainId]["participationFee"],

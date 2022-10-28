@@ -94,6 +94,10 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         if (s_lotteryState != LotteryState.OPEN) {
             revert Lottery__LotteryNotOpen();
         }
+        // enter only once
+        // if(s_participants.includes((msg.sender))) {
+
+        // }
         s_participants.push(payable(msg.sender));
         // Emit Events... very useful when updating dynamic data structures:: mappings, arrays etc...
         emit LotteryEnter(msg.sender);
