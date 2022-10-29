@@ -75,11 +75,12 @@ const Home: NextPage = () => {
                         <Header />
                         {/* {isRaffleOperator === address && ( */}
                         <div className="flex justify-center mt-5 mb-5 ml-20 mr-20">
+                            
                             <AdminControls />
                         </div>
                         <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5 md:ml-20 md:mr-20">
                             <RaffleEntrance />
-                            <NextPick />
+                            {/* <NextPick /> */}
                         </div>
                     </div>
                 )}

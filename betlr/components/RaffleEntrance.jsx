@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useWeb3Contract } from "react-moralis"
-import { contractAddresses, contractABI } from "../constants/constant_files"
+import { contractAddresses, contractABI, networkExtraData } from "../constants/constant_files"
 import { useMoralis } from "react-moralis"
 import { ethers } from "ethers"
 import Marquee from "react-fast-marquee"
@@ -15,11 +15,12 @@ function RaffleEntrance() {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
     const chainId = parseInt(chainIdHex)
     const lotteryAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
+    const networkName = chainId in networkExtraData ? networkExtraData[chainId][0] : null
 
     const [participationFee, setParticipationfee] = useState("0")
     const [numberParticipants, setNumberParticipants] = useState("0")
     const [recentWinner, setRecentWinner] = useState("0")
-    const [listParticipants, setListParticipants] = useState([])
+    const [participants, setParticipants] = useState([])
 
     const dispatch = useNotification()
 
@@ -77,7 +78,7 @@ function RaffleEntrance() {
         setParticipationfee(participationFeeFromCall) //raw  fee value saved on the backend
         setNumberParticipants(numberParticipantsFromCall)
         setRecentWinner(recentWinnerFromCall)
-        setListParticipants(listParticipantsFromCall) // set the list of participants
+        setParticipants(listParticipantsFromCall) // set the list of participants
     }
 
     useEffect(() => {
@@ -97,24 +98,33 @@ function RaffleEntrance() {
             type: "success",
             message: "Successfully entered the Lottery",
             title: "Enter Lottery",
-            position: "topR",
-            icon: "bell",
+            position: "bottomL",
+            //icon: "bell",
         })
     }
+
+    // const listParticipantsInRow = function displayAccounstInRow() {
+    //     for (let i = 0; i < listParticipants.length; i++) {
+    //         console.log(listParticipants[i])
+    //     }
+    // }
 
     return (
         <div className="raffleStats-wrapper flex flex-col">
             {/* raffle entrance */}
+            <h2 className="text-white text-left text-sm italic">
+                Current Network: <span className="text-amber-200 text-sm">{networkName}</span>
+            </h2>
             <div className="raffleStats-wrapper space-y-2 ">
                 <div className="raffleStats-wrapper">
                     <div className="flex justify-between items-center text-white pb-2">
-                        <h2 className="">Cost per entry</h2>
+                        <h2 className="text-center">Participation</h2>
                         <p className="">
                             {/* {entryPrice && ethers.utils.formatEther(entryPrice?.toString())}{" "} ETH */}
                         </p>
                     </div>
                     <div className="flex text-white items-center space-x-2 bg-[#22220f] border-[#2d3533] border p-3">
-                        <p>Participations</p>
+                        <p>Entries</p>
                         <input
                             type="number"
                             className="flex w-full bg-transparent text-right outline-none"
@@ -127,8 +137,9 @@ function RaffleEntrance() {
 
                     <div className="space-y-2 mt-2">
                         <div className="flex items-center justify-between text-gray-400 text-sm italic font-extrabold">
-                            <p>Total Fees to participate</p>
+                            <p>Total participation Price</p>
                             <p>
+                                {ethers.utils.formatUnits(participationFee)} ETH
                                 {/* {entryPrice && Number(ether.util.formatEther(entryPrice.toString())) * quantity}{" "} ETH */}
                             </p>
                         </div>
@@ -155,16 +166,24 @@ function RaffleEntrance() {
                         )}
 
                         <div className="flex items-center justify-between text-gray-400 text-xs italic">
-                            <p className="ml-3">+ Network ( Gas ) Fees</p>
-                            <p>TBC</p>
+                            <p className="ml-3">
+                                + Network({" "}
+                                <span className="text-amber-200 text-sm">{networkName}</span> ) -
+                                Gas Fees
+                            </p>
+                            <p>{} ETH</p>
+                        </div>
+                        <div className="flex items-center justify-between text-gray-400 text-xs italic">
+                            <p className="ml-3">+ Miscellaneous</p>
+                            <p>{} ETH</p>
                         </div>
                     </div>
 
                     <button
                         //  disabled={expiration?.toString() < Date.now().toString() || remainingEntries?.toNumber() === 0}
-                        className="disabled mt-5 w-full bg-gradient-to-br from-yellow-300 to-stone-800 px-10 py-5 font-semibold rounded-md text-xl
+                        className="disabled mt-5 w-full bg-gradient-to-br from-yellow-300 to-stone-800 px-10 py-4 font-semibold rounded-md text-xl
                                       selection: text-white shadow-xl disabled:from-gray-500 disabled:to-gray-100 disabled:text-gray-100 
-                                      disabled:cursor-not-allowed md:hidden"
+                                      disabled:cursor-not-allowed "
                         onClick={async () => {
                             await enterLottery({
                                 onSuccess: handleSuccess,
@@ -187,31 +206,32 @@ function RaffleEntrance() {
 
             {/* Next pick */}
             <div className="raffleStats-wrapper border mt-5">
-                <h1 className="text-4xl text-yellow-200 font-semibold text-center">Next Pick</h1>
                 <div className="flex justify-between p-2 space-x-2">
                     <div className="raffleStats">
-                        <h2 className="text-sm">Total particpants</h2>
+                        <h2 className="text-sm">Currently Paricipating</h2>
                         <p className="text-xl">{numberParticipants}</p>
                     </div>
                     <div className="raffleStats">
-                        <h2 className="text-sm">Remaining participations</h2>
+                        <h2 className="text-sm">Remaining </h2>
                         {/* <p className="text-xl">{remainingEntries?.toNumber()}</p>    */}
                     </div>
                 </div>
+
                 {/* clock ticking */}
                 {/* <div className="mt-5 mb-3">
                 <CountdownTimer />
             </div> */}
                 <div className="flex justify-between p-2 space-x-2">
                     <div className="raffleStats">
-                        <h2 className="text-sm">Recent Winner</h2>
-                        <div className="text-sm">{recentWinner}</div>
+                        <h2 className="text-sm">Particpants Accounts</h2>
+                        <p className="text-sm">{participants}</p>
                     </div>
                 </div>
+                <h1 className="text-3xl text-yellow-200 font-semibold text-center">Next Pick</h1>
                 <div className="flex justify-between p-2 space-x-2">
                     <div className="raffleStats">
-                        <h2 className="text-sm">List Particpants</h2>
-                        <div className="text-sm">{}</div>
+                        <h2 className="text-sm">Recent Winner</h2>
+                        <div className="text-sm">{recentWinner}</div>
                     </div>
                 </div>
             </div>

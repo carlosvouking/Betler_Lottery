@@ -33,9 +33,9 @@ function AdminControls() {
 
     return (
         <div className="text-white text-center px-5 py-3 rounded-md border-stone-300/10 border flex-1">
-            <h2 className="font-bold">Admin controls</h2>
-            <p className="mb-4">
-                Raffle Operator Total commissions :{" "}
+            <h2 className="font-bold text-left">Admin</h2>
+            <p className="ml-4 mb-4 text-left text-sm italic">
+                Lottery Operator: <span className="text-stone-500">{"0x00000"}</span> 
                 {/* {raffleOperatorTotalCommission && 
                 ethers.utils.formatEther(raffleOperatorTotalCommission?.toString())}{" "} ETH */}
             </p>
@@ -44,10 +44,10 @@ function AdminControls() {
                     <StarIcon className="h-6 mx-auto mb-2" />
                     Pick A Random Winner
                 </button>
-                <button className="admin-button">
+                {/* <button className="admin-button">
                     <CurrencyEuroIcon className="h-6 mx-auto mb-2" />
                     Withdraw Commission Fee
-                </button>
+                </button> */}
                 <button className="admin-button">
                     <ArrowPathIcon className="h-6 mx-auto mb-2" />
                     Restart Lottery
