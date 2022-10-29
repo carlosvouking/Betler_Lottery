@@ -14,6 +14,7 @@ const fs = require("fs")
 
 const FRONT_END_ADDRESSES_FILE = "../betlr/constants/contractAddresses.json"
 const FRONT_END_ABI_FILE = "../betlr/constants/contractABI.json"
+const FRONT_END_NETWORK_EXTRA_DATA_FILE = "../betlr/constants/networkExtraData.json"
 
 module.exports = async () => {
     const UPDATE_FRONT_END = process.env.UPDATE_FRONT_END
@@ -22,6 +23,7 @@ module.exports = async () => {
         console.log("--------------*---------------*-----------------*---------------")
         updateContractAdress()
         updateContractAbi()
+        updateNetworkExtraData()
     }
 }
 
@@ -57,7 +59,35 @@ const updateContractAbi = async () => {
 
     console.log(` ** Contract Abi: ${contractAbi}`)
     console.log("    - Front end contract Abi updated")
+    console.log("--------------*---------*-----------------*---------------")
+}
+
+const updateNetworkExtraData = async () => {
+    // change or updating the contract address in the ../constants/
+    const lottery = await ethers.getContract("Lottery")
+    // read the content of the frontend
+    const currentNetworks = JSON.parse(fs.readFileSync(FRONT_END_NETWORK_EXTRA_DATA_FILE, "utf8"))
+    // keep track of all different networks accross all different networks
+    const chainId = network.config.chainId.toString()
+    if (chainId in currentNetworks) {
+        // if there is chainId wihtout network, add the new network
+        if (!currentNetworks[chainId].includes(network.name)) {
+            currentNetworks[chainId].push(network.name)
+        }
+    } else {
+        // no chaindId ? add new array of networks
+        currentNetworks[chainId] = [network.name]
+    }
+    // write the updated addresses back to the frontend network file
+    fs.writeFileSync(FRONT_END_NETWORK_EXTRA_DATA_FILE, JSON.stringify(currentNetworks))
+
+    console.log(` ** Current networks : ${currentNetworks[chainId]}`)
+    console.log("    - Front end contract network updated !")
     console.log("--------------*---------------*-----------------*---------------")
+
+    // gas Price from metamask ethereum
+    //const gasPrice = (await provider.getGasPrice()).add(ethers.BigNumber.from(2000000000))
+    //utils.formatUnits(gasPrice, "gwei")
 }
 
 module.exports.tags = ["all", "frontend"]
