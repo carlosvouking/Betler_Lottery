@@ -217,6 +217,21 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         }
     }
 
+    function restartLottery() public payable {
+        // re-open the Lottery after picking a winner
+        s_lotteryState = LotteryState.OPEN;
+
+        // reset the participants list to zero
+        s_participants = new address payable[](0);
+
+        // reset previous timestamp evert time a winner is picked to allow participation in a new interval
+        s_previousTimeStamp = block.timestamp;
+    }
+
+    fallback() external payable {}
+
+    receive() external payable {}
+
     /** VIEW & | PURE functions */
     // read fee to enter the lottery
     function getParticipationFee() public view returns (uint256) {

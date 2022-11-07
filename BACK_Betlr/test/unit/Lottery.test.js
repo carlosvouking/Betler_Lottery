@@ -206,7 +206,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                               // Now lets get the ending values...
                               const recentWinner = await lottery.getRecentRandomWinner()
                               console.log(`the Last winner was : ${recentWinner}`)
-
+                              console.log(".............All participants.............")
                               console.log(accounts[0].address)
                               console.log(accounts[1].address)
                               console.log(accounts[2].address)
