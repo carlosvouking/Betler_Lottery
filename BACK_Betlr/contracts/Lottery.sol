@@ -54,6 +54,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
     LotteryState private s_lotteryState;
     uint256 private s_previousTimeStamp;
     uint256 private immutable i_interval; // how long is sec we want to wait between lottery runs...
+    // bool private s_isRaffleOperator;
 
     /**EVENTS */
     event LotteryEnter(address indexed player);
@@ -70,6 +71,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         uint64 subscriptionId,
         uint32 callbackGasLimit,
         uint256 interval
+        //bool isRaffleOperator
     )
         VRFConsumerBaseV2(vrfCoordinatorV2) // Interface + Address => Consumer contract to interact with.
         AutomationCompatibleInterface()
@@ -82,6 +84,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         s_lotteryState = LotteryState.OPEN; // open the lottery at contract deployment
         s_previousTimeStamp = block.timestamp; // vlue saved in storage as soon contract loads.
         i_interval = interval;
+        //s_isRaffleOperator = isRaffleOperator;
     }
 
     // enter Lottery
